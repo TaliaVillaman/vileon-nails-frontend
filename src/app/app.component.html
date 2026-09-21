@@ -1,0 +1,595 @@
+<div class="app-container">
+  <!-- TOP MAIN NAVBAR HEADER -->
+  <header class="main-header glass-card">
+    <div class="logo-area" (click)="setMainTab('client'); setClientSubTab('home')">
+      <div class="logo-icon">💅</div>
+      <div>
+        <h1 class="logo-title">VILEON NAILS</h1>
+        <span class="logo-subtitle">SISTEMA DE CITAS • BY <strong>VILEON DIGITAL</strong></span>
+      </div>
+    </div>
+
+    <nav class="main-nav">
+      <button class="nav-tab-btn" [class.active]="activeMainTab === 'client'" (click)="setMainTab('client')">
+        <span>🏠</span> Portal Clienta
+      </button>
+      <button class="nav-tab-btn" [class.active]="activeMainTab === 'admin'" (click)="setMainTab('admin')">
+        <span>👩💼</span> Panel Admin Manicurista
+      </button>
+      <button class="nav-tab-btn whatsapp-pulse" [class.active]="activeMainTab === 'whatsapp'" (click)="setMainTab('whatsapp')">
+        <span>💬</span> WhatsApp Bot AI <span class="badge-live">LIVE</span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- 1. PORTAL PÚBLICO CLIENTAS                 -->
+  <!-- ========================================== -->
+  <main *ngIf="activeMainTab === 'client'" class="client-portal-wrapper">
+    <!-- Sub Navbar for Client Portal -->
+    <nav class="sub-nav">
+      <button [class.active]="clientSubTab === 'home'" (click)="setClientSubTab('home')">Inicio</button>
+      <button [class.active]="clientSubTab === 'services'" (click)="setClientSubTab('services')">Servicios & Precios (RD$)</button>
+      <button [class.active]="clientSubTab === 'gallery'" (click)="setClientSubTab('gallery')">Galería de Diseños</button>
+      <button [class.active]="clientSubTab === 'book'" (click)="setClientSubTab('book')">Agendar Cita 📅</button>
+      <button [class.active]="clientSubTab === 'my-appointments'" (click)="setClientSubTab('my-appointments')">Mis Citas 📱</button>
+    </nav>
+
+    <!-- HOME TAB -->
+    <section *ngIf="clientSubTab === 'home'" class="hero-section glass-card">
+      <div class="hero-content">
+        <span class="hero-badge font-serif">Estudio de Uñas Elite</span>
+        <h2 class="hero-title">La elegancia y precisión en cada detalle de tus uñas</h2>
+        <p class="hero-desc">
+          Reserva tu cita en segundos con el sistema automatizado de <strong>Vileon Nails</strong>. Disfruta de manicura rusa, acrílicos, soft gel y nail art exclusivo con confirmación instantánea por WhatsApp.
+        </p>
+        <div class="hero-actions">
+          <button class="btn-gold" (click)="setClientSubTab('book')">Agendar Cita Ahora ✨</button>
+          <button class="btn-outline-gold" (click)="setClientSubTab('services')">Ver Precios en RD$</button>
+        </div>
+      </div>
+      <div class="hero-image-box">
+        <img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=800&q=80" alt="Vileon Nails Hero" class="hero-img" />
+      </div>
+    </section>
+
+    <!-- INFORMACIÓN DEL NEGOCIO -->
+    <section *ngIf="clientSubTab === 'home'" class="info-grid">
+      <div class="glass-card info-card">
+        <div class="info-icon">📍</div>
+        <h3>Ubicación</h3>
+        <p>Av. Winston Churchill #105, Piantini<br>Santo Domingo, República Dominicana</p>
+      </div>
+      <div class="glass-card info-card">
+        <div class="info-icon">⏰</div>
+        <h3>Horarios de Atención</h3>
+        <p>Lunes a Sábado: 9:00 AM – 7:00 PM<br>Domingos: Cerrado</p>
+      </div>
+      <div class="glass-card info-card">
+        <div class="info-icon">💬</div>
+        <h3>WhatsApp Asistente AI</h3>
+        <p>Atención automatizada 24/7<br><strong>+1 (809) 555-VILEON</strong></p>
+      </div>
+    </section>
+
+    <!-- SERVICES & PRICING TAB -->
+    <section *ngIf="clientSubTab === 'services'" class="services-section">
+      <div class="section-header">
+        <h2 class="section-title">Nuestros Servicios & Precios (RD$)</h2>
+        <p class="section-subtitle">Tratamientos profesionales ejecutados por especialistas graduadas en manicura rusa y escultura de uñas.</p>
+      </div>
+
+      <div class="services-grid">
+        <div *ngFor="let s of services" class="glass-card service-card">
+          <div class="service-img-wrap">
+            <img [src]="s.imageUrl" [alt]="s.name" class="service-img" />
+            <span class="category-tag">{{ s.category }}</span>
+          </div>
+          <div class="service-body">
+            <div class="service-header-row">
+              <h3 class="service-name">{{ s.name }}</h3>
+              <span class="price-tag">RD$ {{ s.priceRD | number }}</span>
+            </div>
+            <p class="service-desc">{{ s.description }}</p>
+            <div class="service-footer">
+              <span class="duration">⏱ {{ s.durationMinutes }} min ({{ s.durationMinutes / 60 }} hrs)</span>
+              <button class="btn-gold btn-sm" (click)="selectServiceForBooking(s)">Reservar 💅</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALLERY TAB -->
+    <section *ngIf="clientSubTab === 'gallery'" class="gallery-section">
+      <div class="section-header">
+        <h2 class="section-title">Galería de Diseños Realizados</h2>
+        <p class="section-subtitle">Explora el portafolio de arte en uñas creado por nuestras manicuristas.</p>
+      </div>
+
+      <div class="gallery-filter-bar">
+        <button [class.active]="selectedCategory === 'Todas'" (click)="selectedCategory = 'Todas'">Todas</button>
+        <button [class.active]="selectedCategory === 'Acrílicas'" (click)="selectedCategory = 'Acrílicas'">Acrílicas</button>
+        <button [class.active]="selectedCategory === 'Manicura Rusa'" (click)="selectedCategory = 'Manicura Rusa'">Manicura Rusa</button>
+        <button [class.active]="selectedCategory === 'Nail Art'" (click)="selectedCategory = 'Nail Art'">Nail Art 3D</button>
+      </div>
+
+      <div class="gallery-grid">
+        <div *ngFor="let d of filteredDesigns" class="glass-card gallery-card" (click)="selectedDesignModal = d">
+          <div class="gallery-img-box">
+            <img [src]="d.imageUrl" [alt]="d.title" class="gallery-img" />
+            <div class="gallery-overlay">
+              <span>🔍 Ver Fotografía</span>
+            </div>
+          </div>
+          <div class="gallery-info">
+            <h4>{{ d.title }}</h4>
+            <div class="gallery-meta">
+              <span>👩🎨 {{ d.manicuristName }}</span>
+              <span>❤️ {{ d.likesCount }} me gusta</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOOKING WIZARD TAB -->
+    <section *ngIf="clientSubTab === 'book'" class="booking-section">
+      <div class="glass-card booking-wizard-card">
+        <div class="wizard-progress">
+          <div class="step-indicator" [class.active]="bookingStep >= 1" [class.completed]="bookingStep > 1">1. Servicio</div>
+          <div class="step-line"></div>
+          <div class="step-indicator" [class.active]="bookingStep >= 2" [class.completed]="bookingStep > 2">2. Manicurista</div>
+          <div class="step-line"></div>
+          <div class="step-indicator" [class.active]="bookingStep >= 3" [class.completed]="bookingStep > 3">3. Fecha & Hora</div>
+          <div class="step-line"></div>
+          <div class="step-indicator" [class.active]="bookingStep >= 4" [class.completed]="bookingStep > 4">4. Tus Datos</div>
+          <div class="step-line"></div>
+          <div class="step-indicator" [class.active]="bookingStep === 5">5. Confirmación</div>
+        </div>
+
+        <!-- STEP 1: SERVICE -->
+        <div *ngIf="bookingStep === 1" class="wizard-step">
+          <h3>Paso 1: Selecciona el Servicio</h3>
+          <div class="step-service-list">
+            <div *ngFor="let s of services" class="wizard-item-card" [class.selected]="selectedService?.id === s.id" (click)="selectServiceForBooking(s)">
+              <img [src]="s.imageUrl" class="thumb" />
+              <div class="info">
+                <h4>{{ s.name }}</h4>
+                <p>{{ s.description }}</p>
+                <span class="price">RD$ {{ s.priceRD | number }} • ⏱ {{ s.durationMinutes }} min</span>
+              </div>
+              <button class="btn-outline-gold">Seleccionar</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: MANICURIST -->
+        <div *ngIf="bookingStep === 2" class="wizard-step">
+          <h3>Paso 2: Selecciona la Manicurista</h3>
+          <p class="sub">Servicio elegido: <strong>{{ selectedService?.name }} (RD$ {{ selectedService?.priceRD | number }})</strong></p>
+          <div class="manicurist-grid">
+            <div *ngFor="let m of manicurists" class="wizard-item-card" [class.selected]="selectedManicurist?.id === m.id" (click)="selectManicuristForBooking(m)">
+              <img [src]="m.photoUrl" class="avatar-img" />
+              <div class="info">
+                <h4>{{ m.fullName }}</h4>
+                <span class="specialty">{{ m.specialty }}</span>
+                <div class="rating">⭐ {{ m.rating }} / 5.0</div>
+              </div>
+              <button class="btn-outline-gold">Elegir</button>
+            </div>
+          </div>
+          <div class="step-buttons">
+            <button class="btn-outline-gold" (click)="bookingStep = 1">← Volver a Servicios</button>
+          </div>
+        </div>
+
+        <!-- STEP 3: DATE & TIME -->
+        <div *ngIf="bookingStep === 3" class="wizard-step">
+          <h3>Paso 3: Elige Fecha y Hora</h3>
+          <div class="date-time-picker-grid">
+            <div class="form-group">
+              <label>📅 Fecha de la Cita</label>
+              <input type="date" [(ngModel)]="selectedDate" class="input-dark" />
+            </div>
+
+            <div class="form-group">
+              <label>🕐 Horario Disponible</label>
+              <div class="time-slots-grid">
+                <button *ngFor="let t of timeSlots" class="slot-btn" [class.active]="selectedTimeSlot === t" (click)="selectedTimeSlot = t">
+                  {{ t }}
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="step-buttons">
+            <button class="btn-outline-gold" (click)="bookingStep = 2">← Volver</button>
+            <button class="btn-gold" (click)="bookingStep = 4">Continuar a Datos →</button>
+          </div>
+        </div>
+
+        <!-- STEP 4: CLIENT DATA -->
+        <div *ngIf="bookingStep === 4" class="wizard-step">
+          <h3>Paso 4: Ingresa tus Datos para WhatsApp</h3>
+          <p class="sub">Recibirás la confirmación y recordatorio automático en tu teléfono.</p>
+          
+          <div class="form-grid">
+            <div class="form-group">
+              <label>👤 Nombre Completo *</label>
+              <input type="text" [(ngModel)]="clientName" placeholder="Ej: María Rodríguez" class="input-dark" />
+            </div>
+
+            <div class="form-group">
+              <label>📱 Número de WhatsApp *</label>
+              <input type="text" [(ngModel)]="clientPhone" placeholder="Ej: +18095550192" class="input-dark" />
+            </div>
+
+            <div class="form-group full-width">
+              <label>📝 Notas o Preferencias de Diseño (Opcional)</label>
+              <textarea [(ngModel)]="bookingNotes" placeholder="Ej: Me gustaría forma almendrada con tono nude rosa..." class="input-dark" rows="3"></textarea>
+            </div>
+          </div>
+
+          <div class="step-buttons">
+            <button class="btn-outline-gold" (click)="bookingStep = 3">← Volver</button>
+            <button class="btn-gold" (click)="confirmBookingDetails()">✅ Confirmar Reserva</button>
+          </div>
+        </div>
+
+        <!-- STEP 5: SUCCESS CONFIRMATION -->
+        <div *ngIf="bookingStep === 5 && createdBooking" class="wizard-step success-step">
+          <div class="success-icon">🎉</div>
+          <h2>¡Cita Registrada Exitosamente!</h2>
+          <p class="sub">Tu código de reserva es: <strong class="code-badge">{{ createdBooking.bookingCode }}</strong></p>
+
+          <div class="booking-receipt glass-card">
+            <div class="receipt-row"><span>Cliente:</span> <strong>{{ createdBooking.clientName }}</strong></div>
+            <div class="receipt-row"><span>WhatsApp:</span> <strong>{{ createdBooking.clientPhone }}</strong></div>
+            <div class="receipt-row"><span>Servicio:</span> <strong>{{ createdBooking.serviceName }}</strong></div>
+            <div class="receipt-row"><span>Manicurista:</span> <strong>{{ createdBooking.manicuristName }}</strong></div>
+            <div class="receipt-row"><span>Fecha & Hora:</span> <strong>{{ createdBooking.appointmentDate }} a las {{ createdBooking.timeSlot }}</strong></div>
+            <div class="receipt-row total"><span>Monto Total:</span> <strong class="price-tag">RD$ {{ createdBooking.totalAmountRD | number }}</strong></div>
+          </div>
+
+          <div class="success-actions">
+            <button class="btn-gold" (click)="setMainTab('whatsapp')">💬 Ver Notificación en WhatsApp Simulator</button>
+            <button class="btn-outline-gold" (click)="resetBooking(); setClientSubTab('home')">Volver al Inicio</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MY APPOINTMENTS PORTAL -->
+    <section *ngIf="clientSubTab === 'my-appointments'" class="my-appointments-section">
+      <div class="section-header">
+        <h2 class="section-title">Consultar, Confirmar o Cancelar Cita</h2>
+        <p class="section-subtitle">Ingresa tu número de WhatsApp o Código de Reserva (Ej: VN-1001 / +18095550192)</p>
+      </div>
+
+      <div class="glass-card search-card">
+        <div class="search-box">
+          <input type="text" [(ngModel)]="searchQuery" placeholder="Ingresa tu código (VN-1001) o WhatsApp..." class="input-dark" (keyup.enter)="searchAppointment()" />
+          <button class="btn-gold" (click)="searchAppointment()">Buscar Cita 🔍</button>
+        </div>
+
+        <div *ngIf="searchError" class="error-msg">{{ searchError }}</div>
+
+        <div *ngIf="searchedAppointment" class="searched-appt-card glass-card">
+          <div class="appt-card-header">
+            <div>
+              <span class="code">{{ searchedAppointment.bookingCode }}</span>
+              <h3>{{ searchedAppointment.serviceName }}</h3>
+            </div>
+            <span class="status-badge" [ngClass]="'status-' + searchedAppointment.status.toLowerCase()">
+              {{ searchedAppointment.status }}
+            </span>
+          </div>
+
+          <div class="receipt-row"><span>Clienta:</span> <strong>{{ searchedAppointment.clientName }} ({{ searchedAppointment.clientPhone }})</strong></div>
+          <div class="receipt-row"><span>Manicurista:</span> <strong>{{ searchedAppointment.manicuristName }}</strong></div>
+          <div class="receipt-row"><span>Fecha & Hora:</span> <strong>{{ searchedAppointment.appointmentDate }} - {{ searchedAppointment.timeSlot }}</strong></div>
+          <div class="receipt-row"><span>Precio:</span> <strong class="price-tag">RD$ {{ searchedAppointment.totalAmountRD | number }}</strong></div>
+
+          <div class="appt-actions">
+            <button *ngIf="searchedAppointment.status !== 'Confirmed'" class="btn-gold btn-sm" (click)="updateAppointmentStatus(searchedAppointment.id, 'Confirmed')">
+              ✅ Confirmar Asistencia
+            </button>
+            <button *ngIf="searchedAppointment.status !== 'Cancelled'" class="btn-outline-gold btn-sm btn-danger" (click)="updateAppointmentStatus(searchedAppointment.id, 'Cancelled')">
+              ❌ Cancelar Cita
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================================== -->
+  <!-- 2. PANEL ADMINISTRATIVO MANICURISTA        -->
+  <!-- ========================================== -->
+  <main *ngIf="activeMainTab === 'admin'" class="admin-panel-layout">
+    <!-- SIDEBAR NAVIGATION EXACT AS REQUESTED -->
+    <aside class="admin-sidebar glass-card">
+      <div class="sidebar-header">
+        <h3 class="font-serif">VILEON NAILS</h3>
+        <span class="role-badge">👤 Admin Salón</span>
+      </div>
+
+      <nav class="sidebar-menu">
+        <button [class.active]="adminSubTab === 'dashboard'" (click)="setAdminSubTab('dashboard')">
+          <span>📊</span> Dashboard
+        </button>
+        <button [class.active]="adminSubTab === 'appointments'" (click)="setAdminSubTab('appointments')">
+          <span>📋</span> Citas Entradas
+        </button>
+        <button [class.active]="adminSubTab === 'services-crud'" (click)="setAdminSubTab('services-crud')">
+          <span>💅</span> Servicios & Precios
+        </button>
+        <button [class.active]="adminSubTab === 'designs-crud'" (click)="setAdminSubTab('designs-crud')">
+          <span>🎨</span> Portafolio Diseños
+        </button>
+        <button [class.active]="adminSubTab === 'schedule'" (click)="setAdminSubTab('schedule')">
+          <span>⏰</span> Horarios & Días
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <span>Powered by <strong>Vileon Digital</strong></span>
+      </div>
+    </aside>
+
+    <!-- ADMIN CONTENT AREA -->
+    <section class="admin-content">
+      <!-- DASHBOARD OVERVIEW -->
+      <div *ngIf="adminSubTab === 'dashboard'" class="dashboard-wrapper">
+        <div class="metrics-grid">
+          <div class="glass-card metric-card">
+            <span class="metric-icon">📅</span>
+            <div class="metric-info">
+              <span class="label">Citas para Hoy</span>
+              <h2 class="value">{{ summary.totalAppointmentsToday }}</h2>
+            </div>
+          </div>
+
+          <div class="glass-card metric-card">
+            <span class="metric-icon">🗓️</span>
+            <div class="metric-info">
+              <span class="label">Citas para Mañana</span>
+              <h2 class="value">{{ summary.totalAppointmentsTomorrow }}</h2>
+            </div>
+          </div>
+
+          <div class="glass-card metric-card">
+            <span class="metric-icon">💰</span>
+            <div class="metric-info">
+              <span class="label">Ingresos Estimados Hoy</span>
+              <h2 class="value gold-text">RD$ {{ summary.totalRevenueRD | number }}</h2>
+            </div>
+          </div>
+
+          <div class="glass-card metric-card">
+            <span class="metric-icon">✅</span>
+            <div class="metric-info">
+              <span class="label">Citas Confirmadas</span>
+              <h2 class="value text-success">{{ summary.confirmedCount }}</h2>
+            </div>
+          </div>
+        </div>
+
+        <!-- CITAS DE HOY LISTING -->
+        <div class="glass-card table-card">
+          <div class="table-header">
+            <h3>📅 Agenda & Citas de Hoy</h3>
+            <span class="price-tag">Actualizado en tiempo real</span>
+          </div>
+
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Hora</th>
+                <th>Código</th>
+                <th>Clienta</th>
+                <th>WhatsApp</th>
+                <th>Servicio</th>
+                <th>Manicurista</th>
+                <th>Monto</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let a of appointments">
+                <td><strong>{{ a.timeSlot }}</strong></td>
+                <td><code class="code">{{ a.bookingCode }}</code></td>
+                <td>{{ a.clientName }}</td>
+                <td>{{ a.clientPhone }}</td>
+                <td>{{ a.serviceName }}</td>
+                <td>{{ a.manicuristName }}</td>
+                <td><strong>RD$ {{ a.totalAmountRD | number }}</strong></td>
+                <td>
+                  <span class="status-badge" [ngClass]="'status-' + a.status.toLowerCase()">
+                    {{ a.status }}
+                  </span>
+                </td>
+                <td>
+                  <div class="action-btn-group">
+                    <button *ngIf="a.status !== 'Confirmed'" class="btn-action confirm" title="Confirmar Cita" (click)="updateAppointmentStatus(a.id, 'Confirmed')">✅</button>
+                    <button *ngIf="a.status !== 'Completed'" class="btn-action complete" title="Marcar Atendida" (click)="updateAppointmentStatus(a.id, 'Completed')">💅</button>
+                    <button *ngIf="a.status !== 'Cancelled'" class="btn-action cancel" title="Cancelar" (click)="updateAppointmentStatus(a.id, 'Cancelled')">❌</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- APPOINTMENTS MANAGER -->
+      <div *ngIf="adminSubTab === 'appointments'" class="dashboard-wrapper">
+        <div class="glass-card table-card">
+          <div class="table-header">
+            <h3>📋 Historial & Control de Citas Entradas</h3>
+          </div>
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Fecha & Hora</th>
+                <th>Código</th>
+                <th>Clienta & WhatsApp</th>
+                <th>Servicio & Manicurista</th>
+                <th>Monto</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let a of appointments">
+                <td>{{ a.appointmentDate }} <br><small>{{ a.timeSlot }}</small></td>
+                <td><code class="code">{{ a.bookingCode }}</code></td>
+                <td><strong>{{ a.clientName }}</strong><br><small>{{ a.clientPhone }}</small></td>
+                <td>{{ a.serviceName }}<br><small>Manicurista: {{ a.manicuristName }}</small></td>
+                <td><strong class="gold-text">RD$ {{ a.totalAmountRD | number }}</strong></td>
+                <td>
+                  <span class="status-badge" [ngClass]="'status-' + a.status.toLowerCase()">
+                    {{ a.status }}
+                  </span>
+                </td>
+                <td>
+                  <div class="action-btn-group">
+                    <button class="btn-action confirm" (click)="updateAppointmentStatus(a.id, 'Confirmed')">Confirmar</button>
+                    <button class="btn-action complete" (click)="updateAppointmentStatus(a.id, 'Completed')">Atendida</button>
+                    <button class="btn-action cancel" (click)="updateAppointmentStatus(a.id, 'Cancelled')">Cancelar</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SERVICES & PRICING CRUD MANAGER -->
+      <div *ngIf="adminSubTab === 'services-crud'" class="crud-wrapper">
+        <div class="glass-card form-card">
+          <h3>➕ Crear / Editar Servicio & Precio (RD$)</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Nombre del Servicio</label>
+              <input type="text" [(ngModel)]="newService.name" placeholder="Ej: Uñas Acrílicas Nude" class="input-dark" />
+            </div>
+            <div class="form-group">
+              <label>Categoría</label>
+              <select [(ngModel)]="newService.category" class="input-dark">
+                <option value="Acrílicas">Acrílicas</option>
+                <option value="Manicura Rusa">Manicura Rusa</option>
+                <option value="Soft Gel">Soft Gel</option>
+                <option value="Pedicura Spa">Pedicura Spa</option>
+                <option value="Nail Art">Nail Art</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Precio en Pesos (RD$)</label>
+              <input type="number" [(ngModel)]="newService.priceRD" placeholder="1500" class="input-dark" />
+            </div>
+            <div class="form-group">
+              <label>Duración (Minutos)</label>
+              <input type="number" [(ngModel)]="newService.durationMinutes" placeholder="90" class="input-dark" />
+            </div>
+            <div class="form-group full-width">
+              <label>Descripción</label>
+              <textarea [(ngModel)]="newService.description" placeholder="Detalles del tratamiento..." class="input-dark" rows="2"></textarea>
+            </div>
+          </div>
+          <button class="btn-gold" (click)="saveService()">Guardar Servicio en Catálogo</button>
+        </div>
+
+        <div class="glass-card table-card">
+          <h3>💅 Catálogo Actual de Servicios</h3>
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Servicio</th>
+                <th>Categoría</th>
+                <th>Duración</th>
+                <th>Precio RD$</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let s of services">
+                <td><strong>{{ s.name }}</strong></td>
+                <td>{{ s.category }}</td>
+                <td>{{ s.durationMinutes }} min</td>
+                <td><strong class="gold-text">RD$ {{ s.priceRD | number }}</strong></td>
+                <td><span class="status-badge status-confirmed">Activo</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SCHEDULE MANAGER -->
+      <div *ngIf="adminSubTab === 'schedule'" class="schedule-wrapper glass-card">
+        <h3>⏰ Configuración de Horarios & Bloqueo de Días Laborables</h3>
+        <p class="sub">Define los horarios de apertura del salón y bloquea los días festivos o de vacaciones de las manicuristas.</p>
+
+        <div class="schedule-grid">
+          <div class="day-row"><span>Lunes a Viernes</span> <strong>9:00 AM – 7:00 PM</strong> <button class="btn-outline-gold btn-sm">Editar</button></div>
+          <div class="day-row"><span>Sábados</span> <strong>9:00 AM – 6:00 PM</strong> <button class="btn-outline-gold btn-sm">Editar</button></div>
+          <div class="day-row"><span>Domingos</span> <strong>CERRADO</strong> <button class="btn-outline-gold btn-sm">Editar</button></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================================== -->
+  <!-- 3. SIMULADOR WHATSAPP BOT AI               -->
+  <!-- ========================================== -->
+  <main *ngIf="activeMainTab === 'whatsapp'" class="whatsapp-sim-wrapper">
+    <div class="sim-header text-center">
+      <h2 class="font-serif gold-text">🔥 Vileon Digital WhatsApp Automation Engine</h2>
+      <p>Simulador interactivo en tiempo real del Bot de WhatsApp para confirmaciones y recordatorios automáticos.</p>
+    </div>
+
+    <div class="phone-frame-container">
+      <!-- SMARTPHONE MOCKUP -->
+      <div class="phone-mockup">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="wa-header">
+            <div class="wa-avatar">💅</div>
+            <div class="wa-contact-info">
+              <span class="name">Vileon Nails Studio 🤖</span>
+              <span class="status">en línea (WhatsApp Business Bot)</span>
+            </div>
+          </div>
+
+          <div class="wa-chat-body">
+            <div class="wa-date-divider">Hoy</div>
+
+            <!-- CHAT BUBBLES -->
+            <div *ngFor="let n of notifications" class="wa-message-block">
+              <div class="wa-bubble bot-bubble">
+                <p class="msg-content">{{ n.content }}</p>
+                <span class="wa-time">{{ n.sentAt | date:'shortTime' }}</span>
+              </div>
+
+              <!-- INTERACTIVE BUTTONS TEMPLATE -->
+              <div class="wa-template-buttons">
+                <button class="wa-btn confirm-btn" (click)="triggerWhatsAppResponse(n.appointmentId, 'CONFIRM')">
+                  ✅ CONFIRMAR CITA
+                </button>
+                <button class="wa-btn cancel-btn" (click)="triggerWhatsAppResponse(n.appointmentId, 'CANCEL')">
+                  ❌ CANCELAR CITA
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="wa-footer">
+            <input type="text" placeholder="Escribe un mensaje por WhatsApp..." class="wa-input" readonly />
+            <button class="wa-send-btn">🎤</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
