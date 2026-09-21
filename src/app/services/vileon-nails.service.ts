@@ -8,7 +8,7 @@ import { Appointment, ServiceItem, Manicurist, NailDesign, DashboardSummary, Wha
   providedIn: 'root'
 })
 export class VileonNailsService {
-  private apiUrl = 'https://localhost:44367/api';
+  private apiUrl = 'https://vileon-nails-backend.onrender.com/api';
 
   // Reactive State Streams
   private servicesSubject = new BehaviorSubject<ServiceItem[]>([]);
